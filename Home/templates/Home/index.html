@@ -15,7 +15,7 @@
 <body>
     <div class="container">
         <div class="py-5 text-center bg-secondary">
-            <h1 class="mb-3"> Welcome to Rizzler's Gallery</h1>
+            <h1 class="mb-3"> Welcome to Anupam's Gallery</h1>
             <form action="" method="post" enctype="multipart/form-data"> <!-- enctype necessary for images-->
                 {% csrf_token %}
                 {{form}}
@@ -25,13 +25,32 @@
             {% for x in img %}
             <div class="col-sm-4">
                 <div class="card m-2">
-                   <img src="{{x.image.url}}" alt="" class="card-img-top" height="200px">
-
+                    {% if x.image %}
+                    <img src="{{x.image.url}}" alt="" class="card-img-top" height="200px">
+                    <div class="card-footer">
+                        <small class="text-muted">
+                            {{x.date}}
+                        </small>
+                    </div>
+                    {% else %}
+                    <p>No image available</p>
+                    {% endif %}
+                    <div class="card-body">
+                        <!--  a link/button to update the image -->
+                        <a href="{% url 'update_image' x.id %}" class="btn btn-primary">Update</a>
+                    
+                        <!-- a form for image deletion-->
+                        <form action="{% url 'delete_image' x.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="image_id" value="{{ x.id }}">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
                 </div>
             </div>
             {% endfor %}
-
         </div>
+        
     </div>
 </body>
 
